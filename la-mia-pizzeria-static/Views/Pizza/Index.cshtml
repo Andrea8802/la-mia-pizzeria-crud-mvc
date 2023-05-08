@@ -1,0 +1,19 @@
+﻿@model List<Pizza>
+
+
+<a href="@Url.Action("Create", "Pizza")" class="btn btn-danger py-1 px-2 mt-2 fs-5 mb-3">Crea</a>
+<ul class="container flex-wrap">
+    @foreach(Pizza pizza in Model)
+    {
+        <a href="@Url.Action("Details", "Pizza", new{id=@pizza.Id})" 
+        style="text-decoration: none; color: black;">
+            <li class="card">
+                <img src="@pizza.Img" alt="Pizza1">
+                <div class="card-body">
+                    <h5 class="card-title">@pizza.Nome</h5>
+                    <h6>@pizza.Prezzo&euro;</h6>
+                </div>
+            </li>
+        </a>
+    }
+</ul>

@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    string nome = "Andrea";
+    string cognome = "Bonaventura";
+
+    int SommaNum(int num){
+        int sum = 0;
+        for (int i = 0; i <= num; i++) sum += i;
+        return sum;
+    }
+
+    int ContaCaratteri(string word)
+    {
+        char[] charaters = word.ToCharArray();
+        int sum = 0;
+
+        foreach (char charater in charaters)
+        {
+            if (charater == 'a') sum++;
+        }
+
+        return sum;
+    }
+
+    List<int> NumRand()
+    {
+        List<int> numList = new List<int>();
+        var rand = new Random();
+
+        for(int i= 0; i <= 20; i++)
+        {
+            numList.Add(rand.Next(1, 91));
+        }
+
+        return numList;
+    }
+
+    List<int> numList = NumRand();
+
+
+}
+
+<div class="text-center">
+    @*Es. 1*@
+    <h2 class="display-4">@nome @cognome</h2>
+
+    @*Es. 2*@
+    <div><b>Somma Numeri: </b> @SommaNum(10)</div>
+
+    @*Es. 3*@
+    <div><b>Somma Caratteri: </b> @ContaCaratteri("nel mezzo del cammin di nostra vita")</div>
+
+    @*Es. 4*@
+     <b>Numeri Randomici:</b>
+    <ul>
+        @{int i = 1;}
+        @foreach(int num in numList)
+        {
+            if(num >= 20 && num<= 70)
+            {
+                <li style="list-style:none;">
+                    <b>@i)</b>@num
+                </li>
+            }
+            i++;
+        }
+    </ul>
+
+    @*Es. 5*@
+    <div><b>Data e ora attuale:</b> @DateTime.Now.ToString("dd/MM/yyyy - HH:mm:ss")</div>
+
+    @*Es. 6-7-8*@
+    <div>
+        @{
+            DateTime data = DateTime.Now;
+
+            <div><b>Data di oggi:</b> @data.AddDays(-7).ToString("dd/MM/yyyy")</div>
+            <div><b>Giorno della settimana:</b> @data.ToString("dddd")</div>
+            <div><b>Giorno della settimana di oggi fra 1 anno:</b> @data.AddYears(1).ToString("dddd")</div>
+        }
+    </div>
+</div>
