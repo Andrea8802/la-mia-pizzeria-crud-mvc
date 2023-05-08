@@ -5,15 +5,21 @@
 <ul class="container flex-wrap">
     @foreach(Pizza pizza in Model)
     {
-        <a href="@Url.Action("Details", "Pizza", new{id=@pizza.Id})" 
-        style="text-decoration: none; color: black;">
+        
             <li class="card">
-                <img src="@pizza.Img" alt="Pizza1">
-                <div class="card-body">
-                    <h5 class="card-title">@pizza.Nome</h5>
-                    <h6>@pizza.Prezzo&euro;</h6>
-                </div>
+                <a href="@Url.Action("Details", "Pizza", new{id=@pizza.Id})"
+                   style="text-decoration: none; color: black;">
+                    <img src="@pizza.Img" alt="Pizza1">
+                    <div class="card-body">
+                        <h5 class="card-title">@pizza.Nome</h5>
+                        <h6>@pizza.Prezzo&euro;</h6>
+                    </div>
+                </a>
+                <a href="@Url.Action("Edit", "Pizza", new {Id = pizza.Id})">Modifica</a>
+                <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@pizza.Id" method="post">
+                    <button type="submit">Elimina</button>
+                </form>
             </li>
-        </a>
+        
     }
 </ul>

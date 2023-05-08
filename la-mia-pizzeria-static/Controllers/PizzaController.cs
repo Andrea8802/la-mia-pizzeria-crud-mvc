@@ -6,6 +6,7 @@ namespace la_mia_pizzeria_static.Controllers
     public class PizzaController : Controller
     {
 
+        [HttpGet]
         public IActionResult Index()
         {
             using (PizzaContext db = new PizzaContext())
@@ -20,6 +21,7 @@ namespace la_mia_pizzeria_static.Controllers
 
         }
 
+        [HttpGet]
         public IActionResult Details(long id)
         {
             using (PizzaContext db = new PizzaContext())
@@ -61,6 +63,78 @@ namespace la_mia_pizzeria_static.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Edit(long id)
+        {
+            using(PizzaContext db = new PizzaContext())
+            {
+                Pizza pizza = db.Pizza.Where(pizza => pizza.Id == id).FirstOrDefault();
+
+                if (pizza == null)
+                    return NotFound();
+
+                else
+                    return View(pizza);
+            }
+             
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public IActionResult Update(long id, Pizza data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Update", data);
+            }
+
+            using(PizzaContext db = new PizzaContext())
+            {
+                Pizza pizza = db.Pizza.Where(pizza => pizza.Id == id).FirstOrDefault();
+
+                if (pizza != null)
+                {
+                    pizza.Nome = data.Nome;
+                    pizza.Descrizione = data.Descrizione;
+                    pizza.Prezzo = data.Prezzo;
+
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public IActionResult Delete(long id)
+        {
+            using (PizzaContext db = new PizzaContext())
+            {
+                Pizza pizza = db.Pizza.Where(pizza => pizza.Id == id).FirstOrDefault();
+
+                if (pizza != null)
+                {
+                    db.Pizza.Remove(pizza);
+
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+        }
     }
 }
 
