@@ -5,6 +5,12 @@ namespace la_mia_pizzeria_static.Controllers
 {
     public class PizzaController : Controller
     {
+        public ICustomLogger Logger;
+
+        public PizzaController(ICustomLogger logger)
+        {
+            Logger = logger;
+        }
 
         [HttpGet]
         public IActionResult Index()
@@ -38,7 +44,7 @@ namespace la_mia_pizzeria_static.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Pizza data)
-        {
+        {  
             if(!ModelState.IsValid)
                 return View(data);
 
@@ -53,6 +59,9 @@ namespace la_mia_pizzeria_static.Controllers
                 db.Pizza.Add(newPizza);
                 db.SaveChanges();
 
+                Logger.WriteLog($"Elemento '{newPizza.Nome}' creato!");
+
+
                 return RedirectToAction("Index");
             }
         }
@@ -64,9 +73,9 @@ namespace la_mia_pizzeria_static.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(long id)
+        public IActionResult Update(long id)
         {
-            using(PizzaContext db = new PizzaContext())
+            using (PizzaContext db = new PizzaContext())
             {
                 Pizza pizza = db.Pizza.Where(pizza => pizza.Id == id).FirstOrDefault();
 
@@ -99,7 +108,10 @@ namespace la_mia_pizzeria_static.Controllers
                     pizza.Descrizione = data.Descrizione;
                     pizza.Prezzo = data.Prezzo;
 
+
                     db.SaveChanges();
+
+                    Logger.WriteLog($"Elemento '{pizza.Nome}' modificato!");
 
                     return RedirectToAction("Index");
                 }
@@ -126,6 +138,8 @@ namespace la_mia_pizzeria_static.Controllers
                     db.Pizza.Remove(pizza);
 
                     db.SaveChanges();
+
+                    Logger.WriteLog($"Elemento '{pizza.Nome}' eliminato!");
 
                     return RedirectToAction("Index");
                 }
