@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace la_mia_pizzeria_static.Models
@@ -25,6 +26,10 @@ namespace la_mia_pizzeria_static.Models
         [Required(ErrorMessage = "L'Immagine è richiesta")]
         [Url]
         public string Img { get; set; }
+
+        public long? CategoryId { get; set; }
+
+        public Category? Category { get; set; }
 
     }
 }

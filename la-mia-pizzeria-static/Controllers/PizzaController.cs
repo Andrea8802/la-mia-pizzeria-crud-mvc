@@ -1,5 +1,6 @@
 ﻿using la_mia_pizzeria_static.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace la_mia_pizzeria_static.Controllers
 {
@@ -32,44 +33,61 @@ namespace la_mia_pizzeria_static.Controllers
         {
             using (PizzaContext db = new PizzaContext())
             {
-                Pizza pizza = db.Pizza.Where(pizza => pizza.Id == id).FirstOrDefault();
+                Pizza pizza = db.Pizza.Where(pizza => pizza.Id == id).Include(pizza => pizza.Category).FirstOrDefault();
 
                 if (pizza == null)
                     return View("Error", "Nessuna pizza trovata con questo ID!");
 
-                return View(pizza);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Pizza data)
-        {  
-            if(!ModelState.IsValid)
-                return View(data);
-
-            using (PizzaContext db = new PizzaContext())
-            {
-                Pizza newPizza = new Pizza();
-                newPizza.Nome = data.Nome;
-                newPizza.Descrizione = data.Descrizione;
-                newPizza.Prezzo = data.Prezzo;
-                newPizza.Img = data.Img;
-
-                db.Pizza.Add(newPizza);
-                db.SaveChanges();
-
-                Logger.WriteLog($"Elemento '{newPizza.Nome}' creato!");
-
-
-                return RedirectToAction("Index");
+                return View("Details", pizza);
             }
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            using (PizzaContext db = new PizzaContext())
+            {
+                List<Category> categories = db.Categories.ToList();
+                PizzaFormModel model = new PizzaFormModel();
+                model.Pizza = new Pizza();
+                model.Categories = categories;
+
+                return View("Create", model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(PizzaFormModel data)
+        {
+            if (!ModelState.IsValid)
+            {
+                using(PizzaContext db = new PizzaContext())
+                {
+                    List<Category> categories = db.Categories.ToList();
+                    data.Categories = categories;
+                    return View(data);
+                }
+            }
+
+            using (PizzaContext db = new PizzaContext())
+            {
+                Pizza pizza = new Pizza();
+                pizza.Nome = data.Pizza.Nome;
+                pizza.Descrizione = data.Pizza.Descrizione;
+                pizza.Prezzo = data.Pizza.Prezzo;
+                pizza.Img = data.Pizza.Img;
+
+                pizza.CategoryId = data.Pizza.CategoryId;
+
+                db.Pizza.Add(pizza);
+                db.SaveChanges();
+
+                Logger.WriteLog($"Elemento '{pizza.Nome}' creato!");
+
+
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpGet]
@@ -83,7 +101,15 @@ namespace la_mia_pizzeria_static.Controllers
                     return NotFound();
 
                 else
-                    return View(pizza);
+                {
+                    List<Category> categories = db.Categories.ToList();
+
+                    PizzaFormModel model = new PizzaFormModel();
+                    model.Pizza = pizza;
+                    model.Categories = categories;
+
+                    return View(model);
+                }
             }
              
         }
@@ -91,11 +117,16 @@ namespace la_mia_pizzeria_static.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Update(long id, Pizza data)
+        public IActionResult Update(long id, PizzaFormModel data)
         {
             if (!ModelState.IsValid)
             {
-                return View("Update", data);
+                using(PizzaContext db = new PizzaContext())
+                {
+                    List<Category> categories = db.Categories.ToList();
+                    data.Categories = categories;
+                    return View("Update", data);
+                }
             }
 
             using(PizzaContext db = new PizzaContext())
@@ -104,10 +135,10 @@ namespace la_mia_pizzeria_static.Controllers
 
                 if (pizza != null)
                 {
-                    pizza.Nome = data.Nome;
-                    pizza.Descrizione = data.Descrizione;
-                    pizza.Prezzo = data.Prezzo;
-
+                    pizza.Nome = data.Pizza.Nome;
+                    pizza.Descrizione = data.Pizza.Descrizione;
+                    pizza.Prezzo = data.Pizza.Prezzo;
+                    pizza.CategoryId = data.Pizza.CategoryId;
 
                     db.SaveChanges();
 
