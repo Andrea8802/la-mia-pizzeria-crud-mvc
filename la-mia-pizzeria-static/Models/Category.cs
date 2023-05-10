@@ -2,7 +2,7 @@
 
 namespace la_mia_pizzeria_static.Models
 {
-    [Table("Category")]
+    [Table("category")]
     public class Category
     {
             public long Id { get; set; }

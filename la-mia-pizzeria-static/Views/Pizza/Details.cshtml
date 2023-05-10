@@ -21,6 +21,20 @@
                     <span>Non ci sono categorie selezionate!</span>
                 }
             </p>
+            <p>
+                <strong>Ingredienti:</strong>
+                @{int i = 1;}
+                @foreach (Ingredient ingredient in Model.Ingredients)
+                {
+                    <div>
+                        <label>
+                            <strong>@i.</strong>
+                            @ingredient.Nome
+                        </label>
+                    </div>
+                    i++;
+                }
+            </p>
             </div>
         </div>
 </div>

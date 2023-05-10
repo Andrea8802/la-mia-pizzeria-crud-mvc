@@ -28,7 +28,7 @@
 
         </div>
 
-        <select asp-for="Pizza.CategoryId"> 
+        <select asp-for="Pizza.CategoryId" rows="10" class="d-block w-100">
             <option value=""></option>
             @foreach(Category category in Model.Categories)
             {
@@ -42,6 +42,15 @@
                 }
             }
         </select>
+
+        <div class="mb-3">
+            <label>Ingredients : </label>
+            <select asp-for="SelectedIngredients" multiple="multiple" asp-items="Model.Ingredient" size="10"
+                    class="form-control mb-2 mr-sm-2 ml-sm-3 leftList">
+            </select>
+            <span asp-validation-for="SelectedIngredients" class="text-danger"></span>
+
+        </div>
         <div class="text-end">
             <input type="submit" class="btn btn-small btn-info" value="Salva">
         </div>

@@ -45,5 +45,12 @@
                 }
             }
         </select>
+
+        <div class="mb-3">
+            <label>Ingredients : </label>
+            <select asp-for="SelectedIngredients" multiple="multiple" rows="10" class="d-block w-100" asp-items="Model.Ingredient">
+            </select>
+            <span asp-validation-for="SelectedIngredients" class="text-danger"></span>
+        </div>
     </form>
 </div>
