@@ -1,4 +1,5 @@
 ﻿using la_mia_pizzeria_static.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,7 @@ namespace la_mia_pizzeria_static.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Create()
         {
             using (PizzaContext db = new PizzaContext())
@@ -72,6 +74,7 @@ namespace la_mia_pizzeria_static.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult Create(PizzaFormModel data)
         {
             if (!ModelState.IsValid)
@@ -83,6 +86,7 @@ namespace la_mia_pizzeria_static.Controllers
 
                     List<Ingredient> ingredients = db.Ingredients.ToList();
                     List<SelectListItem> listIngredients = new List<SelectListItem>();
+                    data.Pizza = new Pizza();
 
                     foreach (Ingredient ingredient in ingredients)
                     {
@@ -129,6 +133,7 @@ namespace la_mia_pizzeria_static.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Update(long id)
         {
             using (PizzaContext db = new PizzaContext())
@@ -169,6 +174,7 @@ namespace la_mia_pizzeria_static.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
 
         public IActionResult Update(long id, PizzaFormModel data)
         {
@@ -176,19 +182,27 @@ namespace la_mia_pizzeria_static.Controllers
             {
                 using(PizzaContext db = new PizzaContext())
                 {
+                    Pizza pizza = db.Pizza.Where(pizza => pizza.Id == id).FirstOrDefault();
+
                     List<Category> categories = db.Categories.ToList();
                     List<Ingredient> ingredients = db.Ingredients.ToList();
                     List<SelectListItem> listIngredients = new List<SelectListItem>();
 
-                    foreach(Ingredient ingredient in ingredients)
+                    pizza.Ingredients = new List<Ingredient>();
+
+                    foreach (Ingredient ingredient in ingredients)
                     {
-                        listIngredients.Add(new SelectListItem(){
+                        listIngredients.Add(new SelectListItem()
+                        {
                             Text = ingredient.Nome,
-                            Value= ingredient.Id.ToString()
+                            Value = ingredient.Id.ToString(),
+                            Selected = pizza.Ingredients.Any(pizza => pizza.Id == ingredient.Id)
                         });
                     }
+
                     data.Categories = categories;
                     data.Ingredient = listIngredients;
+                    data.Pizza = pizza;
                     return View("Update", data);
                 }
             }
@@ -231,6 +245,7 @@ namespace la_mia_pizzeria_static.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
 
         public IActionResult Delete(long id)
         {

@@ -1,7 +1,9 @@
 ﻿@model List<Pizza>
 
-
-<a href="@Url.Action("Create", "Pizza")" class="btn btn-danger py-1 px-2 mt-2 fs-5 mb-3">Crea</a>
+@if (User.IsInRole("ADMIN"))
+{   
+    <a href="@Url.Action("Create", "Pizza")" class="btn btn-primary py-1 px-2 mt-2 fs-5 mb-3">Crea</a>
+}
 <ul class="container flex-wrap">
     @foreach(Pizza pizza in Model)
     {
@@ -15,10 +17,14 @@
                         <h6>@pizza.Prezzo&euro;</h6>
                     </div>
                 </a>
+            @if (User.IsInRole("ADMIN"))
+            {
                 <a href="@Url.Action("Update", "Pizza", new {Id = pizza.Id})">Modifica</a>
                 <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@pizza.Id" method="post">
                     <button type="submit">Elimina</button>
                 </form>
+            }
+ 
             </li>
         
     }

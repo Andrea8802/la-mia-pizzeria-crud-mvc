@@ -27,10 +27,6 @@
             <span asp-validation-for="Pizza.Img" class="text-danger"></span>
 
         </div>
-        <div class="text-end">
-            <input type="submit" class="btn btn-small btn-info" value="Salva">
-        </div>
-
         <select asp-for="Pizza.CategoryId">
             <option value=""></option>
             @foreach (Category category in Model.Categories)
@@ -52,5 +48,12 @@
             </select>
             <span asp-validation-for="SelectedIngredients" class="text-danger"></span>
         </div>
+        <div class="text-end">
+            <input type="submit" class="btn btn-small btn-info" value="Salva">
+        </div>
     </form>
+
+        
+
+       
 </div>

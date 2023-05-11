@@ -25,9 +25,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Pizza" asp-action="Index">Menu</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pizza" asp-action="Create">Create</a>
-                        </li>
+                        @if(User.IsInRole("ADMIN"))
+                        {
+                            @*<li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="@Url.Action("Index", "User")">Admin</a>
+                            </li>*@
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pizza" asp-action="Create">Create</a>
+                            </li>
+                        }
+
+                        
+                        <!-- code omitted -->
+                        <partial name="_LoginPartial" />    
                     </ul>
                 </div>
             </div>
