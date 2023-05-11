@@ -86,7 +86,6 @@ namespace la_mia_pizzeria_static.Controllers
 
                     List<Ingredient> ingredients = db.Ingredients.ToList();
                     List<SelectListItem> listIngredients = new List<SelectListItem>();
-                    data.Pizza = new Pizza();
 
                     foreach (Ingredient ingredient in ingredients)
                     {
@@ -94,6 +93,7 @@ namespace la_mia_pizzeria_static.Controllers
                         { Text = ingredient.Nome, Value = ingredient.Id.ToString() });
                     }
 
+                    data.Pizza = new Pizza();
                     data.Ingredient = listIngredients;
 
                     return View(data);
